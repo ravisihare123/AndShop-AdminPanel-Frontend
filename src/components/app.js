@@ -5,6 +5,7 @@ import Footer from "../layouts/Footer/Footer";
 import * as Switcherdata from "../data/Switcher/Switcherdata";
 import { Outlet } from "react-router-dom";
 import TabToTop from "../layouts/TabToTop/TabToTop";
+import { AuthProvier } from "./Context/auth";
 
 export default function App() {
   return (
@@ -13,7 +14,10 @@ export default function App() {
         <TabToTop />
         <div className="page">
           <div className="page-main">
+            <AuthProvier>
+
             <Header />
+            </AuthProvier>
             <Sidebar />
             <div className="main-content app-content ">
               <div className="side-app">

@@ -1,17 +1,56 @@
-import React from "react";
-import { Card } from "react-bootstrap";
+import axios from "axios";
+import React, { useState } from "react";
+import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import * as custompagesswitcherdata from "../../../data/Switcher/Custompagesswitcherdata"
+import Swal from "sweetalert2";
 export default function Register() {
+
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+const [id, setId] = useState("")
+  const handleRegister = async() => {
+    // alert(name + email + password)
+    var body = {
+      id:id,
+      name: name,
+      email:email,
+      password:password,
+    };
+    var result = await axios.post("http://localhost:5000/admin/insertEditAdmin", body)
+    if (result.status) {
+      alert(result.status)
+      Swal.fire({
+        icon: "success",
+        title: "Login Sucessfull",
+        text: "Welcome ",
+      });
+    }
+    else {
+      Swal.fire({
+        icon: "error",
+        title: "Login Unsucessfull",
+      });
+    }
+  };
+  
+
   return (
     <div className="login-img">
       <div className="page">
         <div className="dropdown float-end custom-layout">
-                <div className="demo-icon nav-link icon mt-4 bg-primary" onClick={()=>custompagesswitcherdata.Swichermainright()}>
-                    <i className="fe fe-settings fa-spin text_primary"></i>
-                </div>
-            </div>
-        <div className="" onClick={()=>custompagesswitcherdata.Swichermainrightremove()}>
+          <div
+            className="demo-icon nav-link icon mt-4 bg-primary"
+            onClick={() => custompagesswitcherdata.Swichermainright()}
+          >
+            <i className="fe fe-settings fa-spin text_primary"></i>
+          </div>
+        </div>
+        <div
+          className=""
+          onClick={() => custompagesswitcherdata.Swichermainrightremove()}
+        >
           <div className="col col-login mx-auto">
             <div className="text-center">
               <img
@@ -26,45 +65,39 @@ export default function Register() {
               <Card.Body>
                 <form className="login100-form validate-form">
                   <span className="login100-form-title">Registration</span>
-                  <div
-                    className="wrap-input100 validate-input"
-
-                  >
+                  <div className="wrap-input100 validate-input">
                     <input
                       className="input100"
                       type="text"
                       name="email"
                       placeholder="User name"
+                      onChange={(e) => setName(e.target.value)}
                     />
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">
                       <i className="mdi mdi-account" aria-hidden="true"></i>
                     </span>
                   </div>
-                  <div
-                    className="wrap-input100 validate-input"
- 
-                  >
+                  <div className="wrap-input100 validate-input">
                     <input
                       className="input100"
                       type="text"
                       name="email"
                       placeholder="Email"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">
                       <i className="zmdi zmdi-email" aria-hidden="true"></i>
                     </span>
                   </div>
-                  <div
-                    className="wrap-input100 validate-input"
-                  
-                  >
+                  <div className="wrap-input100 validate-input">
                     <input
                       className="input100"
                       type="password"
                       name="pass"
                       password="true"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">
@@ -75,9 +108,7 @@ export default function Register() {
                     <input type="checkbox" className="custom-control-input" />
                     <span className="custom-control-label">
                       Agree the
-                      <Link to={`/pages/terms/`}>
-                        terms and policy
-                      </Link>
+                      <Link to={`/pages/terms/`}>terms and policy</Link>
                     </span>
                   </label>
                   <div className="container-login100-form-btn">
@@ -85,7 +116,7 @@ export default function Register() {
                       to={`/dashboard/`}
                       className="login100-form-btn btn-primary"
                     >
-                      Register
+                      <Button type="submit" onClick={()=>handleRegister()}>Register</Button>
                     </Link>
                   </div>
                   <div className="text-center pt-3">

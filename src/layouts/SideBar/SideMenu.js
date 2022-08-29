@@ -8,9 +8,21 @@ export const MENUITEMS = [
         type: "link",
         active: true,
         title: "Dashboard",
-
+      },
+      {
+       
+        icon: "database",
+        type: "sub",
+        active: false,
+        title: "Master",
+        children: [
+          {
+            path: `/category`,
+            type: "link",
+            title: "category",
+          },
+        ],
       },
     ],
   },
-  
 ];

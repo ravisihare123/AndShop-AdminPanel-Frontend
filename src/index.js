@@ -7,7 +7,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 const App = React.lazy(() => import("./components/app"));
 
 //Dashboard
-const Dashboard = React.lazy(()=> import("./components/Dashboard/Dashboard"));
+const Dashboard = React.lazy(() => import("./components/Dashboard/Dashboard"));
+
+//pages
+const Category = React.lazy(() => import("./components/Pages/Master/Category/Index"));
 
 
 //custom Pages
@@ -32,38 +35,22 @@ const Root = () => {
   return (
     <Fragment>
       <BrowserRouter>
-      <React.Suspense fallback={Loaderimg()}>
-        <Routes>
-          <Route
-            path={`/`}
-            element={<App />}
-          >
-            <Route index element={<Dashboard />} />
-            <Route
-              path={`/dashboard`}
-              element={<Dashboard />}
-            /> 
+        <React.Suspense fallback={Loaderimg()}>
+          <Routes>
+            <Route path={`/`} element={<App />}>
+              <Route index element={<Dashboard />} />
+              <Route path={`/dashboard`} element={<Dashboard />} />
+              <Route path={`/category`} element={<Category />} />
             </Route>
-            
-            <Route
-              path={`/custompages/login`}
-              element={<Login />}
-            />
-            <Route
-              path={`/custompages/register`}
-              element={<Register />}
-            />
+
+            <Route path={`/custompages/login`} element={<Login />} />
+            <Route path={`/custompages/register`} element={<Register />} />
             <Route
               path={`/custompages/forgotPassword`}
               element={<ForgotPassword />}
             />
-            <Route
-              path={`/custompages/lockScreen`}
-              element={<LockScreen />}
-            />
-          
-         
-        </Routes>
+            <Route path={`/custompages/lockScreen`} element={<LockScreen />} />
+          </Routes>
         </React.Suspense>
       </BrowserRouter>
     </Fragment>

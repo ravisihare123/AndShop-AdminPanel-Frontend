@@ -1,17 +1,61 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Card } from "react-bootstrap";
-import * as custompagesswitcherdata from "../../../data/Switcher/Custompagesswitcherdata"
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Card } from "react-bootstrap";
+import * as custompagesswitcherdata from "../../../data/Switcher/Custompagesswitcherdata";
+import axios from "axios";
+import Swal from "sweetalert2";
 export default function Login() {
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const login = async (e) => {
+    e.preventDefault();
+    var body = {
+      email: email,
+      password: password,
+    };
+    // alert(JSON.stringify(body));
+    var result = await axios.post(
+      "http://localhost:5000/admin/adminlogin",
+      body
+    );
+    if (result.data.status) {
+      // alert(JSON.stringify(result.data.status));
+      const id = result.data.data.id;
+      const name = result.data.data.name;
+      // alert(id);
+
+      localStorage.setItem("Aid",[ id,name]);
+      navigate("/dashboard");
+      Swal.fire({
+        icon: "success",
+        title: "Login Sucessfull",
+        text: "Welcome ",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "Login Unsucessfull",
+      });
+    }
+  };
   return (
     <div className="login-img">
       <div className="page">
         <div className="dropdown float-end custom-layout">
-                <div className="demo-icon nav-link icon mt-4 bg-primary" onClick={()=>custompagesswitcherdata.Swichermainright()}>
-                    <i className="fe fe-settings fa-spin text_primary"></i>
-                </div>
-            </div>
-        <div className="" onClick={()=>custompagesswitcherdata.Swichermainrightremove()}>
+          <div
+            className="demo-icon nav-link icon mt-4 bg-primary"
+            onClick={() => custompagesswitcherdata.Swichermainright()}
+          >
+            <i className="fe fe-settings fa-spin text_primary"></i>
+          </div>
+        </div>
+        <div
+          className=""
+          onClick={() => custompagesswitcherdata.Swichermainrightremove()}
+        >
           <div className="col col-login mx-auto">
             <div className="text-center">
               <img
@@ -24,7 +68,10 @@ export default function Login() {
           <div className="container-login100">
             <div className="wrap-login100 p-0">
               <Card.Body>
-                <form className="login100-form validate-form">
+                <form
+                  onSubmit={(e) => login(e)}
+                  className="login100-form validate-form"
+                >
                   <span className="login100-form-title">Login</span>
                   <div className="wrap-input100 validate-input">
                     <input
@@ -32,6 +79,7 @@ export default function Login() {
                       type="text"
                       name="email"
                       placeholder="Email"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">
@@ -44,6 +92,7 @@ export default function Login() {
                       type="password"
                       name="pass"
                       placeholder="Password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <span className="focus-input100"></span>
                     <span className="symbol-input100">
@@ -61,12 +110,7 @@ export default function Login() {
                     </p>
                   </div>
                   <div className="container-login100-form-btn">
-                    <Link
-                      to={`/dashboard/`}
-                      className="login100-form-btn btn-primary"
-                    >
-                      Login
-                    </Link>
+                    <Button type="submit"> Login</Button>
                   </div>
                   <div className="text-center pt-3">
                     <p className="text-dark mb-0">

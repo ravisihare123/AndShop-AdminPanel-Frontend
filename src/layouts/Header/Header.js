@@ -1,8 +1,10 @@
 import React from "react";
 import { Dropdown, Navbar, Container,Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import useAuth from "../../components/Context/auth";
 
 export function Header() {
+  // const { adminInfo } = useAuth();
   //full screen
   function Fullscreen() {
     if (
