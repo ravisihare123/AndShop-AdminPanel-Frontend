@@ -23,11 +23,13 @@ export default function Login() {
     );
     if (result.data.status) {
       // alert(JSON.stringify(result.data.status));
-      const id = result.data.data.id;
-      const name = result.data.data.name;
+      // const id = result.data.data.id;
+      // const name = result.data.data.name;
       // alert(id);
 
-      localStorage.setItem("Aid",[ id,name]);
+      localStorage.setItem("Aid", JSON.stringify(result.data.data));
+      
+      
       navigate("/dashboard");
       Swal.fire({
         icon: "success",

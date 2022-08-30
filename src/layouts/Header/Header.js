@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import useAuth from "../../components/Context/auth";
 
 export function Header() {
-  // const { adminInfo } = useAuth();
+  const { adminInfo } = useAuth();
   //full screen
   function Fullscreen() {
     if (
@@ -177,8 +177,8 @@ export function Header() {
                     >
                       <div className="drop-heading">
                         <div className="text-center">
-                          <h5 className="text-dark mb-0">Elizabeth Dyer</h5>
-                          <small className="text-muted">Administrator</small>
+                          <h5 className="text-dark mb-0"></h5>
+                          <small className="text-muted">{adminInfo?.name}</small>
                         </div>
                       </div>
                       <div className="dropdown-divider m-0"></div>

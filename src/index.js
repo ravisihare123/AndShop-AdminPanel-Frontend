@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.scss";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./components/Context/auth";
 
 //App
 const App = React.lazy(() => import("./components/app"));
@@ -35,23 +36,28 @@ const Root = () => {
   return (
     <Fragment>
       <BrowserRouter>
-        <React.Suspense fallback={Loaderimg()}>
-          <Routes>
-            <Route path={`/`} element={<App />}>
-              <Route index element={<Dashboard />} />
-              <Route path={`/dashboard`} element={<Dashboard />} />
-              <Route path={`/category`} element={<Category />} />
-            </Route>
+        <AuthProvider>
+          <React.Suspense fallback={Loaderimg()}>
+            <Routes>
+              <Route path={`/`} element={<App />}>
+                <Route index element={<Dashboard />} />
+                <Route path={`/dashboard`} element={<Dashboard />} />
+                <Route path={`/category`} element={<Category />} />
+              </Route>
 
-            <Route path={`/custompages/login`} element={<Login />} />
-            <Route path={`/custompages/register`} element={<Register />} />
-            <Route
-              path={`/custompages/forgotPassword`}
-              element={<ForgotPassword />}
-            />
-            <Route path={`/custompages/lockScreen`} element={<LockScreen />} />
-          </Routes>
-        </React.Suspense>
+              <Route path={`/custompages/login`} element={<Login />} />
+              <Route path={`/custompages/register`} element={<Register />} />
+              <Route
+                path={`/custompages/forgotPassword`}
+                element={<ForgotPassword />}
+              />
+              <Route
+                path={`/custompages/lockScreen`}
+                element={<LockScreen />}
+              />
+            </Routes>
+          </React.Suspense>
+        </AuthProvider>
       </BrowserRouter>
     </Fragment>
   );
