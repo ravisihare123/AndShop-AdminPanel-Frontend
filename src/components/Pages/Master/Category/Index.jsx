@@ -11,7 +11,8 @@ import {
 } from "react-bootstrap";
 import DataTable from 'react-data-table-component';
 import axios from 'axios';
-import * as Notification from "../../../Components/Notifications"
+import * as Notification from "../../../Components/Notifications";
+import { post, authHeader } from "../../../../helper/api";
 
 export default function Index() {
   const [showModal, setShowModal] = useState(false)
@@ -22,8 +23,10 @@ export default function Index() {
     var body = {
 
     }
-    var result = await axios.post("http://localhost:5000/master/categroyList", body);
-    setData((result.data.data))
+    var result = await post("master/categroyList", body, {
+      headers: authHeader()
+    });
+    setData((result.data))
     // alert(JSON.stringify(result.data))
   }
   useEffect(() => {
@@ -46,7 +49,7 @@ export default function Index() {
     },
     {
       name: "Parent Name",
-      selector: (row) => row.parent_id.slice(row.parent_id.indexOf(",")+1),
+      selector: (row) =>  row.parent_name,
       sortable: false,
     },
 
@@ -83,7 +86,7 @@ export default function Index() {
   const handleDelete = (row) => {
     var params = {
       id: row.id,
-      Aid: localStorage.getItem('Aid')
+      // Aid: localStorage.getItem('Aid')
     }
     Notification.swatPopup().then(async (result) => {
       if (result.isConfirmed) {

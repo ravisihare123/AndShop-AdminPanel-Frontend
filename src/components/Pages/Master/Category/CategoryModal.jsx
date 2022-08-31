@@ -9,7 +9,7 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
     
  const { adminInfo } = useAuth();
     const [name, setName] = useState("")
-    const [parentId, setParentId] = useState("")
+    const [parentId, setParentId] = useState(0)
   const [id, setId] = useState("")
   const [data, setData] = useState([])
     
@@ -17,20 +17,21 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
         setId("")
       setName("")
       setParentId("")
-      setShow({})
+      setState({})
         setShow(false)
 
   }
   // alert(parentId)
     const handleSubmit = async(e) => {
       e.preventDefault();
-      var adminData = JSON.parse(localStorage.getItem('Aid'))
+      // var adminData = JSON.parse(localStorage.getItem('Aid'))
       var params = {
-          Aid:adminData.id,
+          Aid:adminInfo?.id,
             id:id,
             name: name,
             parentid:parentId
-        }
+      }
+      
         var result = await axios.post(
           "http://localhost:5000/master/insertEditCategory",params
         );
@@ -52,8 +53,8 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
   }
     const fetchCategoryName = async () => {
       var body = {};
-      var result = await axios.post(
-        "http://localhost:5000/master/categroyList",
+      var result = await axios.get(
+        "http://localhost:5000/master/fetchCategoryName",
         body
       );
       setData(result.data.data);
@@ -106,7 +107,7 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
                 <option>select parent name</option>
                 {/* {console.log(data)} */}
                 {data.map((item) => 
-                  <option value={item.id+","+item.name}>{item.name}</option>
+                  <option value={item.id}>{item.name}</option>
                 )}
               </Form.Select>
             </FloatingLabel>

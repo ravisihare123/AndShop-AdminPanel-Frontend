@@ -4,6 +4,7 @@ import { Button, Card } from "react-bootstrap";
 import * as custompagesswitcherdata from "../../../data/Switcher/Custompagesswitcherdata";
 import axios from "axios";
 import Swal from "sweetalert2";
+import jwtDecode from "jwt-decode";
 export default function Login() {
   const navigate = useNavigate();
 
@@ -11,6 +12,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
 
   const login = async (e) => {
+    console.log("dgf");
     e.preventDefault();
     var body = {
       email: email,
@@ -27,10 +29,12 @@ export default function Login() {
       // const name = result.data.data.name;
       // alert(id);
 
-      localStorage.setItem("Aid", JSON.stringify(result.data.data));
-      
-      
-      navigate("/dashboard");
+      localStorage.setItem("token", result.data.token);
+      alert(typeof(result.data.token));
+      localStorage.setItem("aid",jwtDecode(result.data.token).id)
+      localStorage.setItem("name", jwtDecode(result.data.token).name)
+      // window.location.reload()
+      navigate(`/`,{replace:true} );
       Swal.fire({
         icon: "success",
         title: "Login Sucessfull",
@@ -47,12 +51,6 @@ export default function Login() {
     <div className="login-img">
       <div className="page">
         <div className="dropdown float-end custom-layout">
-          <div
-            className="demo-icon nav-link icon mt-4 bg-primary"
-            onClick={() => custompagesswitcherdata.Swichermainright()}
-          >
-            <i className="fe fe-settings fa-spin text_primary"></i>
-          </div>
         </div>
         <div
           className=""

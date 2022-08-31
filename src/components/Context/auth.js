@@ -1,37 +1,55 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
+import jwtDecode from "jwt-decode";
 
 export const AuthContext = React.createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  const [token, setToken] = useState("");
   const [adminInfo, setAdminInfo] = useState({
-    AdminName: null,
+  adminName: null,
     aid: null,
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   // Init Loading
   useEffect(() => {
-      function fetchData() {
-        var adminData = JSON.parse(localStorage.getItem('Aid'))
-        if (adminData) {
-            setAdminInfo({
-              AdminName: adminData.name,
-              aid: adminData.id,
-            });
-        }
-      
-        // alert(adminData.name)
+    function fetchData() {
+      var token = localStorage.getItem("token");
+      var aid = localStorage.getItem("aid")
+      var name = localStorage.getItem("name")
+      if (token) {
+        // alert(token)
+        const admin = jwtDecode(token);
+        // alert(JSON.stringify(admin))
+        setToken(token);
+        setAdminInfo({
+          adminName: name, 
+          aid: aid
+        });
         // alert(JSON.stringify(adminInfo))
-   
+      }
     }
     fetchData();
   }, []);
+  // alert(JSON.stringify(adminInfo))
+
+  const handleIsLoading = useCallback(
+    (state) => {
+      setIsLoading(state);
+    },
+    [isLoading]
+  );
 
   const values = useMemo(
     () => ({
-          adminInfo,
-        setAdminInfo
+      isLoading,
+      setIsLoading,
+      token,
+      setToken,
+      adminInfo,
+      setAdminInfo,
     }),
-    [ adminInfo]
+    [isLoading, token, adminInfo]
   );
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;

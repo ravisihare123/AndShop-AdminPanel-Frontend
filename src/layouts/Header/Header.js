@@ -1,10 +1,11 @@
 import React from "react";
 import { Dropdown, Navbar, Container,Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../components/Context/auth";
 
 export function Header() {
   const { adminInfo } = useAuth();
+  const navigate = useNavigate()
   //full screen
   function Fullscreen() {
     if (
@@ -52,6 +53,12 @@ export function Header() {
     document.querySelector(".demo_changer").classList.toggle("active");
     document.querySelector(".demo_changer").style.right = "0px";
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate(`/login`)
+    window.location.reload()
+  }
   return (
     <Navbar expand="md" className="app-header header sticky">
       <Container fluid className="main-container">
@@ -178,12 +185,14 @@ export function Header() {
                       <div className="drop-heading">
                         <div className="text-center">
                           <h5 className="text-dark mb-0"></h5>
-                          <small className="text-muted">{adminInfo?.name}</small>
+                          <small className="text-muted">
+                            {adminInfo.adminName}
+                          </small>
                         </div>
                       </div>
                       <div className="dropdown-divider m-0"></div>
 
-                      <Dropdown.Item href={`/custompages/login/`}>
+                      <Dropdown.Item onClick={handleLogout}>
                         <i className="dropdown-icon fe fe-alert-circle"></i>
                         Sign out
                       </Dropdown.Item>
