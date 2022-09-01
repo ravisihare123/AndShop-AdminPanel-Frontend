@@ -21,6 +21,11 @@ export const MENUITEMS = [
             type: "link",
             title: "category",
           },
+          {
+            path: `/product`,
+            type: "link",
+            title: "product",
+          }
         ],
       },
     ],

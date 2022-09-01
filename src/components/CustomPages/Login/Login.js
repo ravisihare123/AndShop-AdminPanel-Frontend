@@ -30,11 +30,11 @@ export default function Login() {
       // alert(id);
 
       localStorage.setItem("token", result.data.token);
-      alert(typeof(result.data.token));
+      // alert(typeof(result.data.token));
       localStorage.setItem("aid",jwtDecode(result.data.token).id)
       localStorage.setItem("name", jwtDecode(result.data.token).name)
-      // window.location.reload()
-      navigate(`/`,{replace:true} );
+      navigate(`/`);
+      window.location.reload()
       Swal.fire({
         icon: "success",
         title: "Login Sucessfull",

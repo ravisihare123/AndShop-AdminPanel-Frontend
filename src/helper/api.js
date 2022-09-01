@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const API_URL = "http://localhost:5000";
-// export const API_URL = 'http://143.198.124.185/api';
 const instance = axios.create({
   baseURL: API_URL,
 });
@@ -39,8 +38,8 @@ export const post = async (url, params, config) => {
       console.log(error.config);
     });
 
-  if (!data.st) {
-    alert(data.msg);
+  if (!data.status) {
+    // alert(data.msg);
   }
 
   return data;

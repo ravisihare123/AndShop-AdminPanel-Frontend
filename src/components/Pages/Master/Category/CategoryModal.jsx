@@ -4,6 +4,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import useAuth from "../../../Context/auth";
+import { post ,authHeader,get } from '../../../../helper/api';
 
 export default function CategoryModal({ show, setShow,state, setState, categoryList }) {
     
@@ -12,7 +13,7 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
     const [parentId, setParentId] = useState(0)
   const [id, setId] = useState("")
   const [data, setData] = useState([])
-    
+    // alert(parentId)
     const handleClose = () => {
         setId("")
       setName("")
@@ -26,22 +27,26 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
       e.preventDefault();
       // var adminData = JSON.parse(localStorage.getItem('Aid'))
       var params = {
-          Aid:adminInfo?.id,
+          Aid:adminInfo.aid,
             id:id,
             name: name,
             parentid:parentId
       }
       
-        var result = await axios.post(
-          "http://localhost:5000/master/insertEditCategory",params
+        var result = await post(
+          "master/insertEditCategory", params, {
+            headers:authHeader()
+          }
         );
-        if (result.data.status) {
-          setShow(false)
-          categoryList()
+        if (result.status) {
+          
             Swal.fire({
               icon: "success",
               title: " Categroy has inserted!!!",
             });
+          setShow(false);
+          setState({});
+          categoryList();
         }
         else {
             Swal.fire({
@@ -53,11 +58,11 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
   }
     const fetchCategoryName = async () => {
       var body = {};
-      var result = await axios.get(
-        "http://localhost:5000/master/fetchCategoryName",
+      var result = await get(
+        "master/fetchCategoryName",
         body
       );
-      setData(result.data.data);
+      setData(result.data);
       // alert(JSON.stringify(result.data))
   };
   
@@ -106,11 +111,12 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
               >
                 <option>select parent name</option>
                 {/* {console.log(data)} */}
-                {data.map((item) => 
+                {data.map((item) => (
                   <option value={item.id}>{item.name}</option>
-                )}
+                ))}
               </Form.Select>
             </FloatingLabel>
+           
           </Form.Group>
         </Modal.Body>
 
