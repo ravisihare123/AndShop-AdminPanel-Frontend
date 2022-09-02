@@ -1,77 +1,94 @@
-
 import React, { useEffect, useState } from "react";
-import { Row, Col,Form,FloatingLabel, Card, Container } from "react-bootstrap";
-import { get, post } from "../../../../helper/api";
+import {
+  Row,
+  Col,
+  Form,
+  FloatingLabel,
+  Card,
+  Container,
+} from "react-bootstrap";
+import { authHeader, get, post } from "../../../../helper/api";
 import useAuth from "../../../Context/auth";
 import * as Notification from "../../../Components/Notifications/index";
+import Swal from "sweetalert2";
+import { useLocation } from "react-router-dom";
 
 export default function ProductForm() {
-  const {adminInfo} = useAuth()
-    const [pId, setPId] = useState("");
-    const [id, setId] = useState(0);
-    const [parentId, setParentId] = useState(0);
-    const [name, setName] = useState("");
-    const [desc, setDesc] = useState("");
-    const [salePrice, setSalePrice] = useState("");
-    const [mrp, setMrp] = useState("");
-  const [image, setImage] = useState({ bytes: "", filename: "" });
-  const [categoryName, setCategoryName] = useState([])
+  const { adminInfo } = useAuth();
+  const location = useLocation();
+  const [pId, setPId] = useState(
+    location.state?.p_id ? location.state.p_id : ""
+  );
+  const [id, setId] = useState(location.state?.id);
+  const [parentId, setParentId] = useState(
+    location.state?.parent_id ? location.state.parent_id : 0
+  );
+  const [name, setName] = useState(location.state?.name);
+  const [desc, setDesc] = useState(location.state?.description);
+  const [salePrice, setSalePrice] = useState(location.state?.sales_price);
+  const [mrp, setMrp] = useState(location.state?.mrp);;
+  const [categoryName, setCategoryName] = useState([]);
   const [parentName, setParentName] = useState([]);
 
+  const [images, setImages] = useState([]);
 
   const fetchParentName = async () => {
-    var body = {}
-    var result = await get("master/fetchParentName", body)
-    setParentName(result.data)
+    var body = {};
+    var result = await get("master/fetchParentName", body);
+    setParentName(result.data);
     // alert(JSON.stringify(result.data));
-  }
+  };
 
-  const fetchCategoryName = async() => {
+  const fetchCategoryName = async () => {
     var body = {};
     var result = await get("master/fetchCategoryName", body);
     setCategoryName(result.data);
-  }
-// alert(JSON.stringify(categoryData))
+  };
+  // alert(JSON.stringify(categoryData))
   useEffect(() => {
     fetchCategoryName();
     fetchParentName();
-  }, [])
-  
+  }, []);
 
-    const handleImage = (event) => {
-        setImage({bytes:event.target.files[0],filename:URL.createObjectURL(event.target.files[0])})
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+   
+    var formData = new FormData();
+    formData.append("Aid", adminInfo.aid);
+    formData.append("id", pId);
+    formData.append("categoryid", id);
+    formData.append("parentid", parentId);
+    formData.append("name", name);
+    formData.append("desc", desc);
+    formData.append("sprice", salePrice);
+    formData.append("mrprice", mrp);
+
+    for (const el in images) {
+      formData.append("img", images[el]);
     }
 
-    const handleSubmit = async(e) => {
-        e.preventDefault();
-        // alert(id + parentId + name + desc + salePrice + mrp)
-        // alert(JSON.stringify(image.bytes))
-        // alert(id+""+parentId)
-      var formData = new FormData();
-      formData.append("Aid", adminInfo.aid);
-      formData.append("id", pId);
-      formData.append("categoryid", id);
-      formData.append("parentid", parentId);
-      formData.append("name", name);
-      formData.append("desc", desc);
-      formData.append("sprice", salePrice);
-      formData.append("mrprice", mrp);
-      formData.append("img", image.bytes);
-      
-      var result = await post("master/insertEditProduct", formData)
-      
-      if (result.status) {
-        Notification.swatSuccess(result.msg);
-        setId("")
-        setPId("")
-        setParentId("")
-        setName("")
-        setDesc("")
-        setSalePrice("")
-        setMrp("")
-        setImage("")
-      }
+    var result = await post("master/insertEditProduct", formData, {
+      headers: authHeader(),
+    });
+
+    if (result.status) {
+      Notification.swatSuccess(result.msg);
+      setId("");
+      setPId("");
+      setParentId("");
+      setName("");
+      setDesc("");
+      setSalePrice("");
+      setMrp("");
+      // setImage("");
+    } else {
+      Swal.fire({
+        icon: "warning",
+        title: " Categroy has not inserted!!!",
+      });
     }
+  };
   return (
     <div>
       <div className="page-header">
@@ -81,7 +98,7 @@ export default function ProductForm() {
               <Card>
                 <Card.Body>
                   <Form>
-                    <h3> {0 === null ? "inserted" : "updated"} product</h3>
+                    <h3> {pId == "" ? "inserted" : "updated"} product</h3>
                     <br />
                     <Row className="g-2">
                       <Col md>
@@ -95,10 +112,11 @@ export default function ProductForm() {
                           >
                             <Form.Select
                               aria-label="Floating label select example"
-                                value={id}
-                                onChange={(e) => setId(e.target.value)}
+                              value={id}
+                              onChange={(e) => setId(e.target.value)}
+                              required
                             >
-                              <option >-- select category name --</option>
+                              <option>-- select category name --</option>
                               {categoryName.map((item) => (
                                 <option value={item.id}>{item.name}</option>
                               ))}
@@ -117,13 +135,15 @@ export default function ProductForm() {
                           >
                             <Form.Select
                               aria-label="Floating label select example"
-                                value={parentId}
-                                onChange={(e) => setParentId(e.target.value)}
+                              value={parentId}
+                              onChange={(e) => setParentId(e.target.value)}
                             >
                               <option>-- select SubCategory name --</option>
                               {/* {console.log(data)} */}
                               {parentName.map((item) => (
-                                <option value={item.parent_id}>{item.parent_name}</option>
+                                <option value={item.parent_id}>
+                                  {item.parent_name}
+                                </option>
                               ))}
                             </Form.Select>
                           </FloatingLabel>
@@ -136,15 +156,13 @@ export default function ProductForm() {
                       <Col md>
                         <Form.Group controlId="formFile" className="mb-3">
                           <b>
-                            <Form.Label>Enter Product Name</Form.Label>
+                            <Form.Label>Enter Product Name </Form.Label>
                           </b>
                           <Form.Control
                             placeholder="Product Name"
                             type="text"
                             value={name}
-                             onChange={(e) =>
-                               setName(e.target.value)
-                             }
+                            onChange={(e) => setName(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -152,15 +170,13 @@ export default function ProductForm() {
                       <Col md>
                         <Form.Group controlId="formFile" className="mb-3">
                           <b>
-                            <Form.Label>Enter Description  </Form.Label>
+                            <Form.Label>Enter Description </Form.Label>
                           </b>
                           <Form.Control
                             placeholder="Description"
                             type="text"
                             value={desc}
-                            onChange={(e) =>
-                            setDesc(e.target.value)
-                            }
+                            onChange={(e) => setDesc(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -178,9 +194,7 @@ export default function ProductForm() {
                             placeholder="sale price"
                             type="number"
                             value={salePrice}
-                            onChange={(e) =>
-                              setSalePrice(e.target.value)
-                            }
+                            onChange={(e) => setSalePrice(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -194,9 +208,7 @@ export default function ProductForm() {
                             placeholder=" Enter MRP"
                             type="number"
                             value={mrp}
-                            onChange={(e) =>
-                              setMrp(e.target.value)
-                            }
+                            onChange={(e) => setMrp(e.target.value)}
                             required
                           />
                         </Form.Group>
@@ -212,26 +224,27 @@ export default function ProductForm() {
                           </b>
                           <Form.Control
                             type="file"
-                            // value={image.bytes}
-                            onChange={(event) => handleImage(event)}
+                            multiple
+                            // value={image.filename}
+                            onChange={(event) => {
+                              // handleImage(event);
+                              // console.log(event.target.files);
+                              setImages(event.target.files);
+                            }}
                             required
                           ></Form.Control>
                         </Form.Group>
+                        
                       </Col>
                     </Row>
-                    <button
-                      className="btn btn-secondary"
-                      type="submit"
-                      //   onClick={validateNextStep}
-                      //   disabled={count > 3}
-                    >
+                    <button className="btn btn-secondary" type="submit">
                       Close
                     </button>
                     &nbsp;
                     <button
                       className="btn btn-primary"
                       type="submit"
-                        onClick={handleSubmit}
+                      onClick={handleSubmit}
                     >
                       Submit
                     </button>

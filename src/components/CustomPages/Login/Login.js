@@ -33,13 +33,13 @@ export default function Login() {
       // alert(typeof(result.data.token));
       localStorage.setItem("aid",jwtDecode(result.data.token).id)
       localStorage.setItem("name", jwtDecode(result.data.token).name)
-      navigate(`/`);
-      window.location.reload()
       Swal.fire({
         icon: "success",
         title: "Login Sucessfull",
         text: "Welcome ",
       });
+       navigate(`/`);
+       window.location.reload();
     } else {
       Swal.fire({
         icon: "error",

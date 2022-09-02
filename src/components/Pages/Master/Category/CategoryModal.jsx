@@ -4,7 +4,8 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import Swal from "sweetalert2";
 import FloatingLabel from 'react-bootstrap/esm/FloatingLabel';
 import useAuth from "../../../Context/auth";
-import { post ,authHeader,get } from '../../../../helper/api';
+import { post, authHeader, get } from '../../../../helper/api';
+import * as Notification from "../../../Components/Notifications/index";
 
 export default function CategoryModal({ show, setShow,state, setState, categoryList }) {
     
@@ -39,11 +40,7 @@ export default function CategoryModal({ show, setShow,state, setState, categoryL
           }
         );
         if (result.status) {
-          
-            Swal.fire({
-              icon: "success",
-              title: " Categroy has inserted!!!",
-            });
+          Notification.swatSuccess(result.msg);
           setShow(false);
           setState({});
           categoryList();

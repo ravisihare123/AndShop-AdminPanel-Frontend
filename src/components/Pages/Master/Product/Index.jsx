@@ -7,29 +7,35 @@ import {
   OverlayTrigger,
   Tooltip,
 } from "react-bootstrap";
-
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import DataTable from "react-data-table-component";
-import { API_URL, post } from "../../../../helper/api";
-
+import { API_URL, authHeader, post } from "../../../../helper/api";
+import useAuth from "../../../Context/auth";
+import * as Notification from "../../../Components/Notifications/index";
+import ProductForm from "./ProductForm";
 
 export default function Index() {
-  const [data, setData] = useState([])
-
+  const { adminInfo } = useAuth();
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+const [state, setState] = useState({})
   const productList = async () => {
-    var body = {
-      
-    }
-    var result = await post("master/productList", body)
-    setData(result.data)
-    alert(JSON.stringify(result.data));
-  }
+    var body = {};
+    var result = await post("master/productList", body, {
+      headers: authHeader(),
+    });
+    setData(result.data);
+    // alert(JSON.stringify(result.data));
+  };
 
   useEffect(() => {
-    productList()
-  }, [])
-  
+    productList();
+  }, []);
+
+  // var img = [];
+
   const columns = [
+  
     {
       name: "ID",
       selector: (row) => row.p_id,
@@ -68,6 +74,8 @@ export default function Index() {
     {
       name: "Image",
       selector: (row) => <img src={`${API_URL}/images/${row.image}`} />,
+      // selector: (row) => img.map((item) => item`${row.image}`),
+      // selector: (row) => row.image,
       sortable: true,
     },
     {
@@ -100,23 +108,48 @@ export default function Index() {
     },
   ];
 
-    const deleteTooltip = (props) => (
-      <Tooltip id="button-tooltip" {...props}>
-        Delete
-      </Tooltip>
-    );
-    const editTooltip = (props) => (
-      <Tooltip id="button-tooltip" {...props}>
-        Edit
-      </Tooltip>
+  const deleteTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Delete
+    </Tooltip>
   );
-  
+  const editTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Edit
+    </Tooltip>
+  );
+
   const handleDelete = (row) => {
-  alert(row.p_id)
+    var params = {
+      id: row.p_id,
+      Aid: adminInfo.aid,
+    };
+    Notification.swatPopup().then(async (result) => {
+      if (result.isConfirmed) {
+        var result = await post("master/deleteProduct", params, {
+          headers: authHeader(),
+        });
+
+        if (result.status) {
+          Notification.swatSuccess(result.msg);
+        } else {
+          alert("Invaild Token ...");
+        }
+        productList();
+      } else if (result.isDenied) {
+        Notification.swatCancel();
+      }
+    });
+  };
+  
+
+  
+  const handleUpdateShow = (row) => {
+    setState({ ...row });
+    navigate("/product/form", { state: row });
+
   }
-  const handleUpdateShow = () => {
-    
-  }
+  // alert(JSON.stringify(state))
 
   return (
     <div>
