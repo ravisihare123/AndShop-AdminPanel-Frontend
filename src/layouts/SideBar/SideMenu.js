@@ -10,7 +10,6 @@ export const MENUITEMS = [
         title: "Dashboard",
       },
       {
-       
         icon: "database",
         type: "sub",
         active: false,
@@ -19,13 +18,18 @@ export const MENUITEMS = [
           {
             path: `/category`,
             type: "link",
-            title: "category",
+            title: "Category",
           },
           {
             path: `/product`,
             type: "link",
-            title: "product",
-          }
+            title: "Product",
+          },
+          {
+            path: `/banner/form`,
+            type: "link",
+            title: "Banner",
+          },
         ],
       },
     ],

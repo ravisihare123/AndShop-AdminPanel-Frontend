@@ -5,6 +5,7 @@ import * as custompagesswitcherdata from "../../../data/Switcher/Custompagesswit
 import axios from "axios";
 import Swal from "sweetalert2";
 import jwtDecode from "jwt-decode";
+import * as Notification from "../../../components/Components/Notifications/index";
 export default function Login() {
   const navigate = useNavigate();
 
@@ -32,12 +33,8 @@ export default function Login() {
       localStorage.setItem("token", result.data.token);
       // alert(typeof(result.data.token));
       localStorage.setItem("aid",jwtDecode(result.data.token).id)
-      localStorage.setItem("name", jwtDecode(result.data.token).name)
-      Swal.fire({
-        icon: "success",
-        title: "Login Sucessfull",
-        text: "Welcome ",
-      });
+      localStorage.setItem("name", jwtDecode(result.data.token).name);
+      Notification.swatSuccess(result.data.msg)
        navigate(`/`);
        window.location.reload();
     } else {

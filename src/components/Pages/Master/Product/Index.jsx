@@ -34,6 +34,18 @@ const [state, setState] = useState({})
 
   // var img = [];
 
+
+
+  const imagesPrint = (row) => {
+    let x = JSON.parse(row.image)
+    return x.map((item) =>
+    
+    {return <img src={`${API_URL}/images/${item}`} width="100px"  />}
+    
+    )
+}
+
+  
   const columns = [
   
     {
@@ -50,6 +62,7 @@ const [state, setState] = useState({})
       name: "subcategory Name",
       selector: (row) => row.sub_name,
       sortable: false,
+      
     },
     {
       name: "Product Name",
@@ -73,10 +86,15 @@ const [state, setState] = useState({})
     },
     {
       name: "Image",
-      selector: (row) => <img src={`${API_URL}/images/${row.image}`} />,
       // selector: (row) => img.map((item) => item`${row.image}`),
-      // selector: (row) => row.image,
-      sortable: true,
+      // selector: (row) => {
+      //   for (var i = 0; i <= data.length; i++){
+      //     alert(JSON.stringify(<img src={`${API_URL}/images/${row.image}` } />))
+      //   }
+      // },
+      // selector:(row)=>(row.image),
+      selector: (row) => imagesPrint(row),
+      sortable: true, 
     },
     {
       name: "Action",
@@ -90,18 +108,18 @@ const [state, setState] = useState({})
             <i
               className="fe fe-edit fa-2x"
               onClick={() => handleUpdateShow(row)}
-            ></i>
+              ></i>
             {/* </Link> */}
           </OverlayTrigger>
           <OverlayTrigger
             placement="bottom"
             delay={{ show: 250, hide: 400 }}
             overlay={deleteTooltip}
-          >
+            >
             <i
               className="mx-4 fe fe-trash-2 fa-2x text-red"
               onClick={() => handleDelete(row)}
-            ></i>
+              ></i>
           </OverlayTrigger>
         </>
       ),
@@ -172,12 +190,13 @@ const [state, setState] = useState({})
           <Link
             to="/product/form"
             className="btn btn-primary btn-icon text-white me-3"
-          >
+            >
             <span>
               <i className="fe fe-plus"></i>&nbsp;
             </span>
             Add product
           </Link>
+           
         </div>
       </div>
       <Row className=" row-sm">
