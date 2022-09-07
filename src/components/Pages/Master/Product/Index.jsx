@@ -40,14 +40,13 @@ const [state, setState] = useState({})
     let x = JSON.parse(row.image)
     return x.map((item) =>
     
-    {return <img src={`${API_URL}/images/${item}`} width="100px"  />}
+    { return <img src={`${API_URL}/images/${item}`} width="50px" /> }
     
     )
 }
 
   
   const columns = [
-  
     {
       name: "ID",
       selector: (row) => row.p_id,
@@ -62,7 +61,6 @@ const [state, setState] = useState({})
       name: "subcategory Name",
       selector: (row) => row.sub_name,
       sortable: false,
-      
     },
     {
       name: "Product Name",
@@ -93,8 +91,8 @@ const [state, setState] = useState({})
       //   }
       // },
       // selector:(row)=>(row.image),
-      selector: (row) => imagesPrint(row),
-      sortable: true, 
+      selector: (row) => <div style={{ width: 500 }}>{ imagesPrint(row)}</div>,
+      sortable: true,
     },
     {
       name: "Action",
@@ -108,18 +106,18 @@ const [state, setState] = useState({})
             <i
               className="fe fe-edit fa-2x"
               onClick={() => handleUpdateShow(row)}
-              ></i>
+            ></i>
             {/* </Link> */}
           </OverlayTrigger>
           <OverlayTrigger
             placement="bottom"
             delay={{ show: 250, hide: 400 }}
             overlay={deleteTooltip}
-            >
+          >
             <i
               className="mx-4 fe fe-trash-2 fa-2x text-red"
               onClick={() => handleDelete(row)}
-              ></i>
+            ></i>
           </OverlayTrigger>
         </>
       ),

@@ -149,7 +149,7 @@ export default function Index() {
             <span>
               <i className="fe fe-plus"></i>&nbsp;
             </span>
-            Add airport
+            Add category
           </Link>
           <CategoryModal
             show={showModal}
