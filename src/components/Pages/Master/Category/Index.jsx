@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import CategoryModal from './CategoryModal';
 import {
   Row,
@@ -20,6 +20,7 @@ export default function Index() {
   const [showModal, setShowModal] = useState(false)
   const [data, setData] = useState([])
   const [state, setState] = useState({})
+  const navigate = useNavigate()
 
   const categoryList = async() => {
     var body = {
@@ -28,7 +29,15 @@ export default function Index() {
     var result = await post("master/categroyList", body, {
       headers: authHeader()
     });
-    setData((result.data))
+    if (result.data) {
+      
+      setData((result.data))
+    }
+    else {
+      localStorage.clear()
+      window.location.reload()
+      navigate("/login")
+    }
     // alert(JSON.stringify(result.data))
   }
   useEffect(() => {

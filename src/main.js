@@ -30,7 +30,7 @@ export default function Main() {
       {token ? (
         <>
           <Route path={`/`} element={<App />}>
-            <Route index element={<Dashboard />} />
+            <Route path={'/dashboard'} element={<Dashboard />} />
             <Route path={`/category`} element={<Category />} />
             <Route path={`/product`} element={<Product />} />
             <Route path={`/product/form`} element={<ProductForm />} />
