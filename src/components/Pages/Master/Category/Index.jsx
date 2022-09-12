@@ -35,8 +35,8 @@ export default function Index() {
     }
     else {
       localStorage.clear()
-      window.location.reload()
       navigate("/login")
+      window.location.reload()
     }
     // alert(JSON.stringify(result.data))
   }
