@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { Navigate, Route, Routes } from "react-router-dom";
 import useAuth from "./components/Context/auth";
+import Info from "./components/Pages/Master/info/Info";
 
 
 //App
@@ -17,7 +18,10 @@ const ProductForm = React.lazy(() =>
   import("./components/Pages/Master/Product/ProductForm")
 );
 const Banner = React.lazy(() => import("./components/Pages/Master/Banner/Index"))
-const BannerForm = React.lazy(()=>import("./components/Pages/Master/Banner/BannerForm"))
+const BannerForm = React.lazy(() => import("./components/Pages/Master/Banner/BannerForm"))
+const Order = React.lazy(() => import("./components/Pages/Master/order/order.js"));
+
+// const Info = React.lazy(() => import("./components/Pages/Master/info/Info.js"));
 //custom pages
  const Custompages = React.lazy(()=>import("./components/custompages"))
 
@@ -35,8 +39,10 @@ export default function Main() {
             <Route path={`/product`} element={<Product />} />
             <Route path={`/product/form`} element={<ProductForm />} />
             <Route path={`/banner`} element={<Banner />} />
-            <Route path={ `/banner/form`} element={<BannerForm/>} />
+            <Route path={`/banner/form`} element={<BannerForm />} />
+            <Route path={`/order/list`} element={<Order />} />
           </Route>
+            <Route path={`/info`} element={<Info/>} />
         </>
       ) : (
         <>

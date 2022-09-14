@@ -37,13 +37,12 @@ const [state, setState] = useState({})
 
 
   const imagesPrint = (row) => {
-    let x = JSON.parse(row.image)
-    return x.map((item) =>
-    
-    { return <img src={`${API_URL}/images/${item}`} width="50px" /> }
-    
-    )
-}
+    // let x = JSON.parse(row.image)
+    let x = (row.image)
+    return x.map((item) => {
+      return <img src={`${API_URL}/images/${item}`} width="50px" />;
+    });
+  }
 
   
   const columns = [

@@ -30,6 +30,11 @@ export const MENUITEMS = [
             type: "link",
             title: "Banner",
           },
+          {
+            path: `/order/list`,
+            type: "link",
+            title: "Order",
+          },
         ],
       },
     ],
